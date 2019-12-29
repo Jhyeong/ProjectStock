@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Stock_Info
+from .models import Crawling_Data
 
 # Register your models here.
-admin.site.register(Stock_Info)
+admin.site.register(Crawling_Data)

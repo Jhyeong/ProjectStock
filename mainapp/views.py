@@ -1,15 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Stock_Info
+from .models import Crawling_Data
+import logging
 
+LOGGER = logging.getLogger("DEBUG")
 # Create your views here.
 def index(request):
-    crawling_info_list = Stock_Info.objects.all()
-    str = ""
-    
-    for item in crawling_info_list:
-        str += item.name
+    LOGGER.debug("#########index#########")
+    Crawling_Data().init_crawling_data()
 
-    context = {"crawling_info_list" : crawling_info_list}
+    crawling_list = Crawling_Data.objects.all()
+
+    context = {"crawling_list" : crawling_list}
 
     return render(request, "mainapp/index.html", context)
