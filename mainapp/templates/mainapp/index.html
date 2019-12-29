@@ -7,33 +7,51 @@
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'mainapp/css/common.css' %}" >
 </header>
 <body>
-    <table class="table">
-        <thead class="thead-dark">
+    <div class="btn-group" role="group">
+        <form action="/select_crawling_data" method="POST">
+            {% csrf_token %}
+            <button name="select_crawling_data" class="btn btn-default">조회하기</button>
+        </form>
+        <form action="/insert_crawling_data" method="POST">
+            {% csrf_token %}
+            <button name="insert_crawling_data" class="btn btn-default">추출하기</button>
+        </form>
+        <form action="/delete_all" method="POST">
+            {% csrf_token %}
+            <button name="delete_all" class="btn btn-default">전체삭제</button>
+        </form>
+    </div>
+    <div class="content">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">종목코드</th>
+                    <th scope="col">회사명</th> 
+                    <th scope="col">기사제목</th>
+                    <th scope="col">추출시간</th>
+                    <th scope="col">추출시점가격</th>
+                    <th scope="col">전일대비가격</th>
+                </tr>
+            </thead>
+            {% for item in crawling_list %}
             <tr>
-                <th scope="col">종목코드</th>
-                <th scope="col">회사명</th> 
-                <th scope="col">기사제목</th>
-                <th scope="col">추출시간</th>
-                <th scope="col">추출시점가격</th>
-                <th scope="col">전일대비가격</th>
+                <td>{{item.company_code}}</td>
+                <td>{{item.company_name}}</td>
+                <td>{{item.news_title}}</td>
+                <td>{{item.current_time}}</td>
+                <td>{{item.current_price}}</td>
+                {% if "+" in item.indecrease_percent %}
+                <td style="color: red;">{{item.indecrease_amount}}({{item.indecrease_percent}}%)</td>
+                {% else %}
+                <td style="color: royalblue;">{{item.indecrease_amount}}({{item.indecrease_percent}}%)</td>
+                {% endif %}
             </tr>
-        </thead>
-        {% for item in crawling_list %}
-        <tr>
-            <td>{{item.company_code}}</td>
-            <td>{{item.company_name}}</td>
-            <td>{{item.news_title}}</td>
-            <td>{{item.current_time}}</td>
-            <td>{{item.current_price}}</td>
-            {% if "+" in item.indecrease_percent %}
-            <td style="color: red;">{{item.indecrease_amount}}({{item.indecrease_percent}}%)</td>
-            {% else %}
-            <td style="color: royalblue;">{{item.indecrease_amount}}({{item.indecrease_percent}}%)</td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-</table>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 </html>

@@ -23,6 +23,7 @@ class Crawling_Data(models.Model):
     #한경
     URL_HANKYUNG = "http://stock.hankyung.com/news/app/newslist.php?cid=0103"
 
+    #최초 데이터를 셋팅하는 함수
     def init_crawling_data(self):
         crawling_data = self.make_crawling_data()
         crawling_data = self.add_stock_info(crawling_data)
@@ -121,5 +122,10 @@ class Crawling_Data(models.Model):
             company["current_time"] = "%s-%s-%s %s:%s:%s" %(now.year, now.month, now.day, now.hour, now.minute, now.second)
 
         return company_list
+
+    def delete_all(self):
+        LOGGER.debug("#########전체 데이터 삭제하기#########")
+        queryset = Crawling_Data.objects.all()
+        queryset.delete()
 
     
