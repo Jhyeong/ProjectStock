@@ -22,6 +22,7 @@ class Crawling_Data(models.Model):
 
     #한경
     URL_HANKYUNG = "http://stock.hankyung.com/news/app/newslist.php?cid=0103"
+    HDR = {'User-Agent': 'Mozilla/5.0', 'referer' : 'http://naver.com'}
 
     #최초 데이터를 셋팅하는 함수
     def init_crawling_data(self):
@@ -44,7 +45,7 @@ class Crawling_Data(models.Model):
         LOGGER.debug("#########기사 크롤링#########")
 
         result_list = []
-        source_code_from_url = requests.get(url_raw_data)
+        source_code_from_url = requests.get(url_raw_data, headers=self.HDR)
         source_code_from_url.encoding = "euc-kr"
         soup = BeautifulSoup(source_code_from_url.text, "html.parser")
         li_items = soup.find_all("li", {"class" : "list_news_item"})
@@ -106,7 +107,7 @@ class Crawling_Data(models.Model):
         
         for company in company_list:
             company_code = company["company_code"]
-            source_code_from_url = requests.get("https://finance.naver.com/item/main.nhn?code="+company_code)
+            source_code_from_url = requests.get("https://finance.naver.com/item/main.nhn?code="+company_code, headers=self.HDR)
             source_code_from_url.encoding = "euc-kr"
             soup = BeautifulSoup(source_code_from_url.text, "html.parser")
             current_price = soup.find("p", {"class":"no_today"})
